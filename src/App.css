@@ -1,3 +1,13 @@
+.start {
+  opacity: 0;
+  background-color: blue;
+}
+.end {
+  opacity: 1;
+  transition: opacity 0.5s;
+  background-color: orange;
+}
+
 .topnav {
   color: orange;
 }
@@ -7,4 +17,12 @@
   background-image: url("./img/Space\ Connect_space-exploration-sc_fm1ysf.avif");
   background-size: cover;
   background-position: center;
+}
+
+.detailstart {
+  opacity: 0;
+}
+.detailend {
+  opacity: 1;
+  transition: opacity 1s;
 }

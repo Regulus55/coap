@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { Col, Container, Nav, Navbar, Row } from "react-bootstrap";
-import { useState } from "react";
+import { createContext, useState } from "react";
 import data from "./data.js";
 import {
   Routes,
@@ -13,11 +13,14 @@ import {
 import Detail from "./routes/Detail";
 import Event from "./routes/Event.js";
 import axios from "axios";
+import Cart from "./routes/Cart.js";
+
+export let Context1 = createContext();
 
 function App() {
   let [shoes, setShoes] = useState(data);
   let navigate = useNavigate();
-  const [sdata, setSdata] = useState([]);
+  let [재고] = useState([10, 11, 12]);
 
   return (
     <>
@@ -27,6 +30,13 @@ function App() {
             SHOP
           </Navbar.Brand>
           <Nav className="me-auto">
+            <Nav.Link
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              뒤로가기
+            </Nav.Link>
             <Nav.Link href="/about">about</Nav.Link>
             <Nav.Link
               onClick={() => {
@@ -35,13 +45,8 @@ function App() {
             >
               event
             </Nav.Link>
-            <Nav.Link
-              onClick={() => {
-                navigate(-1);
-              }}
-            >
-              뒤로가기
-            </Nav.Link>
+
+            <Nav.Link href="/cart">Cart</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -97,8 +102,15 @@ function App() {
             </>
           }
         />
-        <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
-
+        <Route
+          path="/detail/:id"
+          element={
+            <Context1.Provider value={{ 재고, shoes }}>
+              <Detail shoes={shoes} />
+            </Context1.Provider>
+          }
+        />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/about" element={<About />}>
           <Route path="member" element={<div>멤버임</div>} />
           <Route path="location" element={<div>위치정보임</div>} />
