@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { Col, Container, Nav, Navbar, Row } from "react-bootstrap";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import data from "./data.js";
 import {
   Routes,
@@ -18,6 +18,11 @@ import Cart from "./routes/Cart.js";
 export let Context1 = createContext();
 
 function App() {
+  // let obj = { name: "kim" };
+  // localStorage.setItem("data", JSON.stringify(obj));
+  // let 꺼낸거 = localStorage.getItem("data");
+  // console.log(JSON.parse(꺼낸거).name);
+
   let [shoes, setShoes] = useState(data);
   let navigate = useNavigate();
   let [재고] = useState([10, 11, 12]);
@@ -50,7 +55,6 @@ function App() {
           </Nav>
         </Container>
       </Navbar>
-
       <Routes>
         <Route
           path="/"

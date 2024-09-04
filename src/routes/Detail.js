@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import shoes0 from "../img/shoes0.jpg";
 import shoes1 from "../img/shoes1.jpg";
 import shoes2 from "../img/shoes2.jpg";
@@ -7,6 +7,9 @@ import { useContext, useEffect, useState } from "react";
 import { Nav } from "react-bootstrap";
 import "../App.css";
 import { Context1 } from "../App.js";
+import data from "../store/dataSlice.js";
+import { addCart } from "../store.js";
+import { useDispatch, useSelector } from "react-redux";
 
 // const YellowBtn = styled.button`
 //   background: ${(props) => props.bg};
@@ -21,6 +24,10 @@ import { Context1 } from "../App.js";
 const Detail = (props) => {
   const params = useParams();
   const found = props.shoes.find((x) => x.id == params.id);
+  const dispatch = useDispatch();
+
+  const state = useSelector((state) => state);
+  console.log("cart", state.cart);
 
   let { 재고, shoes } = useContext(Context1);
 
@@ -33,6 +40,38 @@ const Detail = (props) => {
     //   코드  => useEffect 동작전에 실행되는 ㅎ마수
     // }
   }, []);
+
+  // let obj = { name: "kim" };
+  // localStorage.setItem("data", JSON.stringify(obj));
+  // let 꺼낸거 = localStorage.getItem("data");
+  // console.log(JSON.parse(꺼낸거).name);
+
+  const location = useLocation();
+  const [watched, setWatched] = useState(() => {
+    const savedWatched = localStorage.getItem("watched");
+    return savedWatched ? JSON.parse(savedWatched) : [];
+  });
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
+  useEffect(() => {
+    // console.log(location.pathname, params.id);
+    localStorage.getItem("watched");
+    if (location.pathname?.includes("detail")) {
+      setWatched((prevWatched) => {
+        // if (!prevWatched.includes(params.id)) {
+        //   return [...prevWatched, params.id];
+        // }
+        // return prevWatched;
+        if (prevWatched.includes(params.id)) {
+          prevWatched = prevWatched.filter((item) => item !== params.id);
+          prevWatched.push(params.id);
+        }
+        return prevWatched;
+      });
+    }
+  }, []);
+  console.log(watched);
 
   const [탭, 탭변경] = useState(0);
 
@@ -75,6 +114,14 @@ const Detail = (props) => {
           <h4 className="pt-5">{found.title}</h4>
           <p>{found.content}</p>
           <p>{found.price}</p>
+          <button
+            onClick={() => {
+              dispatch(addCart());
+            }}
+            className="btn btn-warning"
+          >
+            Cart 추가하기
+          </button>{" "}
           <button className="btn btn-danger">주문하기</button>
           {/* <YellowBtn bg="orange">버튼</YellowBtn>
           <NewBtn>dd</NewBtn> */}
